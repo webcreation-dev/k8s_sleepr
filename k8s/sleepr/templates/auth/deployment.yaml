@@ -15,19 +15,13 @@ spec:
         app: auth
     spec:
       containers:
-        - image: us-east4-docker.pkg.dev/sleepr-378423/auth/production
+        - image: us-east4-docker.pkg.dev/rugged-weaver-446607-j8/authentication/production
           name: auth
           env:
             - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb
-                  key: connectionString
+              value: 'mongodb://mongo:27017/sleepr'
             - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: jwt
-                  key: jwtSecret
+              value: '4YdOfiPtyv1aYAjSdr7MidPOnmZHtT4AdLAvQldpHvD2SROwEXS7E1JQHhUn0XEy0bOCCHnI8zIxWKocI7ASb7Kh3uQ0spn9FsZ'
             - name: JWT_EXPIRATION
               value: '3600'
             - name: TCP_PORT
