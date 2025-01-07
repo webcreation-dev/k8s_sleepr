@@ -18,8 +18,24 @@ spec:
         - image: us-east4-docker.pkg.dev/rugged-weaver-446607-j8/authentication/production
           name: auth
           env:
-            - name: MONGODB_URI
-              value: 'mongodb://mongo:27017/sleepr'
+            - name: DATASOURCE_USERNAME
+              value: 'postgres'
+            - name: DATASOURCE_PASSWORD
+              value: 'postgres'
+            - name: DATASOURCE_HOST
+              value: 'database'
+            - name: DATASOURCE_PORT
+              value: '5432'
+            - name: DATASOURCE_DATABASE
+              value: 'postgres'
+            - name: DATASOURCE_URL
+              value: 'postgresql://postgres:postgres@database:5432/postgres'
+            - name: OTP_API_URL
+              value: 'https://api.getourvoice.com/v1/otp'
+            - name: OTP_APP_ID
+              value: '64959b67-a4ef-4513-9ee9-de0d1ea11c9c'
+            - name: OTP_AUTH_KEY
+              value: '2709|vg38jyfNNTQyHh5ES99hPB15YLaRAB1wyQC51oZhPdhHXexBO7cZU8bbNwTVvTBwIhS9Aj7MVt44h2hvNVOaFVnb8CF6QQClE9461LAnncPjndHIwcjvKuzSrfXSQH25wYpBP8NXhDpTBkDKwXaKnPg2TjrGbVWEq5wiGxktTHanu86Oe6EodVmyVH6z5xrlDWUbDTXsiPWv1rLbm7siwADmp5aImJq1hSIaJBp4kSqdVnU3'
             - name: JWT_SECRET
               value: '4YdOfiPtyv1aYAjSdr7MidPOnmZHtT4AdLAvQldpHvD2SROwEXS7E1JQHhUn0XEy0bOCCHnI8zIxWKocI7ASb7Kh3uQ0spn9FsZ'
             - name: JWT_EXPIRATION
