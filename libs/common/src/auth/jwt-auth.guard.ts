@@ -3,34 +3,64 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Reflector } from '@nestjs/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { AUTH_SERVICE } from '../constants/services';
-import { UserDto } from '../dto';
+import { User } from '../models';
+import { RoleEnum } from '../enums';
+import { extractJwtFromRequest } from './extract-jwt-request';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
+  private readonly logger = new Logger(JwtAuthGuard.name);
+
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authClient: ClientProxy,
+    private readonly reflector: Reflector,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const jwt = context.switchToHttp().getRequest().cookies?.Authentication;
-    
+    const request = context.switchToHttp().getRequest();
+    const jwt = extractJwtFromRequest(request);
+
+    console.log('jwt auth');
+    console.log(jwt);
+
     if (!jwt) {
       return false;
     }
+
+    const roles = this.reflector.get<RoleEnum[]>('roles', context.getHandler());
+
     return this.authClient
-      .send<UserDto>('authenticate', {
+      .send<User>('authenticate', {
         Authentication: jwt,
       })
       .pipe(
         tap((res) => {
+          if (roles) {
+            for (const role of roles) {
+              if (
+                !res.roles?.map((role) => role.name as RoleEnum).includes(role)
+              ) {
+                this.logger.error('The user does not have valid roles.');
+                throw new UnauthorizedException();
+              }
+            }
+          }
           context.switchToHttp().getRequest().user = res;
         }),
         map(() => true),
-        catchError(() => of(false)),
+        catchError((err) => {
+          this.logger.error(err);
+          return of(false);
+        }),
       );
   }
 }

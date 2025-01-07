@@ -1,4 +1,4 @@
-import { IsCreditCard, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsCreditCard, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CardDto {
   @IsString()
@@ -7,7 +7,7 @@ export class CardDto {
 
   @IsNumber()
   exp_month: number;
-
+  
   @IsNumber()
   exp_year: number;
 
