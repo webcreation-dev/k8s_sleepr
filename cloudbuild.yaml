@@ -5,12 +5,12 @@ steps:
       [
         'build',
         '-t',
-        'us-east4-docker.pkg.dev/rugged-weaver-446607-j8/auth/production',
+        'us-east4-docker.pkg.dev/rugged-weaver-446607-j8/authentication/production',
         '-f',
         'apps/auth/Dockerfile',
         '.',
       ]
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-east4-docker.pkg.dev/rugged-weaver-446607-j8/auth/production']
+    args: ['push', 'us-east4-docker.pkg.dev/rugged-weaver-446607-j8/authentication/production']
 options:
   logging: CLOUD_LOGGING_ONLY
